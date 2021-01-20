@@ -1,0 +1,9 @@
+
+version: 2
+
+sources: 
+  - name: spotify_models
+    database: postgres
+    schema: public
+    tables: 
+      -  name: song

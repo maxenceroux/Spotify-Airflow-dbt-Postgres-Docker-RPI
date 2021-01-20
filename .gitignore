@@ -1,0 +1,8 @@
+*venv*
+*logs
+*usr*
+*venv/*
+target
+*versions*
+*__pycache__*
+*.env

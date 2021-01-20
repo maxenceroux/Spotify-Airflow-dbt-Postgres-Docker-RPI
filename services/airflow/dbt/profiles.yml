@@ -1,0 +1,12 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: db
+      user: postgres
+      pass: postgres
+      port: 5432
+      dbname: postgres
+      schema: test
+      threads: 4
