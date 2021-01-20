@@ -3,6 +3,7 @@
 
 This solution provides a all-in-one service that gathers your Spotify history on a regular basis and pushes it into a PostgreSQL database. For the sake of the technical exercise, I've decided to use FastAPI web framework to expose core endpoints. The workflow is orchestrated by Airflow and dbt helps transforming data into valuable insights (WIP). Every service in containeurized in a docker container. All containers can be launched from a single docker-compose command. 
 
+And ported to Raspbian ARM Architecture
 ## Spotify 
 Sorry Spotify, but since you don't allow users to programaticaly fetch their listens' history, I've implemented a Selenium scrapper to grab a token from your Console. 
 
