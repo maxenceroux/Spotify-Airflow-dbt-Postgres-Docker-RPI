@@ -16,6 +16,7 @@ from sqlalchemy import func, desc
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
+import logging
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 JWT_SECRET = 'mysecret'
@@ -58,6 +59,7 @@ def get_songs(token: str = Depends(oauth2_scheme)):
         )
 
     spotify_cli = SpotifyClient()
+    logging.warning('collect token')
     token = get_token()
     # ts = int(time.time())
     # ts = db.session.query(ModelSong).order_by(desc('ts')).first().ts
@@ -70,7 +72,7 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     songs_schema = []
     for s in songs:
         songs_schema.append(ModelSong(
-            artist=s['artist'], album_name=s['albums'], name=s['name'], ts=s['ts']))
+            artist=s['artist'], album_name=s['albums'], name=s['name'], ts=s['ts'], spotify_id=s['spotify_id']))
     db.session.bulk_save_objects(songs_schema)
     db.session.commit()
     return songs_schema

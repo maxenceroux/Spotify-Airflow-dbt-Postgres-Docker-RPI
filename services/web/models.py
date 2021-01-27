@@ -11,6 +11,7 @@ class Song(Base):
     name = Column(String)
     album_name = Column(String)
     ts = Column(DateTime)
+    spotify_id = Column(String)
 
 class User(Base):
     __tablename__ = "user"

@@ -6,6 +6,7 @@ class Song(BaseModel):
     name: str = None
     album_name: str = None
     ts: datetime.datetime
+    spotify_id: str = None
     class Config:
         orm_mode = True
 

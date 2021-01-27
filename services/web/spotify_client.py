@@ -52,11 +52,12 @@ class SpotifyClient:
         songs=response.json()['items']
         if len(songs)==0:
             return False
-        artists_li, names_li, ts_li, albums_li = [], [], [], []
+        artists_li, names_li, ts_li, albums_li, spotify_li = [], [], [], [], []
         for song in songs:
             artists_li.append(song['track']['album']['artists'][0]['name'])
             albums_li.append(song['track']['album']['name'])
             names_li.append(song['track']['name'])
             ts_li.append(song['played_at'])
-        songs_json = [{"artist":a, "albums":ab, "name":n, "ts":t} for a, ab, n, t in zip(artists_li, albums_li, names_li, ts_li)]
+            spotify_li.append(song['track']['id'])
+        songs_json = [{"artist":a, "albums":ab, "name":n, "ts":t, "spotify_id":sp} for a, ab, n, t, sp in zip(artists_li, albums_li, names_li, ts_li, spotify_li)]
         return songs_json
