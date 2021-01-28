@@ -6,7 +6,9 @@ services:
         networks:
             - airflownet
     web:
-        build: ./services/web
+        build: 
+          context: ./services/web
+          dockerfile: Dockerfile.amd
         command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
         ports:
             - 8000:8000
@@ -18,14 +20,6 @@ services:
           - db
         volumes:
           - .:/usr/src/app
-        networks:
-            - airflownet
-    nginx:
-        build: ./services/nginx
-        ports:
-            - 1337:80
-        depends_on:
-            - web
         networks:
             - airflownet
     db:
@@ -70,7 +64,9 @@ services:
         networks:
           - airflownet
     airflow:
-      build: ./services/airflow
+      build: 
+        context: ./services/airflow
+        dockerfile: Dockerfile.amd
       restart: always
       environment: 
         DBT_PROFILES_DIR: /services/airflow/dbt

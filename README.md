@@ -12,16 +12,6 @@ Sorry Spotify, but since you don't allow users to programaticaly fetch their lis
 ```bash
 git clone https://github.com/maxenceroux/Spotify-Airflow-dbt-Postgres-Docker.git
 ```
-
-## Run Docker-Compose
-```bash
-docker-compose up --build
-```
-## Migrate with alembic
-```bash 
-docker-compose run web alembic revision --autogenerate -m "First migration"
-docker-compose run web alembic upgrade head
-```
 ## Credentials
 If you haven't done it yet, you should first head to https://developer.spotify.com/dashboard/login and create an app. 
 Once that app is created, you'll be given a client id and a client secret. 
@@ -42,6 +32,23 @@ Add your credentials to the following files :
     - MY_USERNAME : random username that will be used to authorize your API calls
     - MY_PASSWORD : random password that will be used to authorize your API calls
 
+
+## Run Docker-Compose
+### On AMD CPU architecture
+```bash
+docker-compose -f docker-compose-amd.yml up --build
+```
+### On ARM CPU architecture
+```bash
+docker-compose -f docker-compose-arm.yml up --build
+```
+
+
+## Migrate with alembic
+```bash 
+docker-compose run web alembic revision --autogenerate -m "First migration"
+docker-compose run web alembic upgrade head
+```
 # Usage
 
 ## FastAPI
