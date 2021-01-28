@@ -49,7 +49,6 @@ def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
     token = jwt.encode({'user': user.username}, JWT_SECRET)
     return {'access_token': token, 'token_type': 'bearer'}
 
-
 @app.get("/songs", status_code=200)
 def get_songs(token: str = Depends(oauth2_scheme)):
     

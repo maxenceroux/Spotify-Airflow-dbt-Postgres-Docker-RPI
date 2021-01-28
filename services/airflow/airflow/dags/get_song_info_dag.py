@@ -56,8 +56,6 @@ def get_spotify_token(**context):
     context['ti'].xcom_push(key="spotify_token", value=response.json()['access_token'])
     return response.json()['access_token']
 
-
-
 def get_songs_info(**context):
     song_ids = context['ti'].xcom_pull(key="my_songs")
     token =  context['ti'].xcom_pull(key="spotify_token")
@@ -70,7 +68,33 @@ def get_songs_info(**context):
     'Authorization': f'Bearer {token}'
     }
     response = requests.request("GET", url, headers=headers)
-    return response.json()
+    res = response.json()['audio_features']
+    keys_to_remove = ['analysis_url', 'type',  'uri', 'track_href', 'time_signature']
+    features_list = []
+    for song in res:
+        for key in keys_to_remove:
+            song.pop(key)
+        features_list.append(song)
+    url = f"https://api.spotify.com/v1/tracks?ids={song_ids}"
+    response = requests.request("GET", url, headers=headers)
+    res = response.json()['tracks']
+    songs_list = []
+    for song in res: 
+        songs_list.append({
+            "album_name": song['album']['name'],
+            "artist": song['album']['artists'][0]['name'],
+            "name": song['name'],
+            "id": song['id']
+        })
+    merged_li = []
+    for i in range(len(features_list)):
+        merged_li.append(dict(songs_list[i],**features_list[i]))
+    context['ti'].xcom_push(key="songs_info", value=merged_li)
+    return merged_li
+
+def upload_to_pgsql(**context):
+    songs = context['ti'].xcom_pull(key="songs_info")
+    
 
 t1a = PythonOperator(
     task_id='get_songs',
