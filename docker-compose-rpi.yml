@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     chrome:
-        image: selenium/standalone-chrome:latest
+        image: kynetiv/selenium-standalone-chromium-pi
         hostname: chrome
         networks:
             - airflownet
@@ -14,22 +14,14 @@ services:
           - 8000
         env_file:
           - ./services/web/.env
-        depends_on: 
+        depends_on:
           - db
         volumes:
           - .:/usr/src/app
         networks:
             - airflownet
-    nginx:
-        build: ./services/nginx
-        ports:
-            - 1337:80
-        depends_on:
-            - web
-        networks:
-            - airflownet
     db:
-        image: postgres:12.0
+        image: arm32v7/postgres
         ports:
           - "5432:5432"
         volumes:
@@ -42,18 +34,18 @@ services:
             - airflownet
     pgadmin:
         container_name: pgadmin
-        image: dpage/pgadmin4
+        image: biarms/pgadmin4
         environment:
           - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
           - PGADMIN_DEFAULT_PASSWORD=admin
         ports:
-          - "5050:80"
+          - "5050:5050"
         depends_on:
           - db   
         networks:
             - airflownet
     postgres-airflow:
-        image: postgres
+        image: arm32v7/postgres
         environment: 
           POSTGRES_PASSWORD: pssd
           POSTGRES_USER: airflowuser
@@ -94,7 +86,6 @@ services:
         MY_PASSWORD: maxence
       depends_on: 
         - postgres-airflow
-        - statsd-exporter
       ports:
         - 7777:8080
       volumes: 
@@ -111,37 +102,8 @@ services:
             - 8125:8125/udp
         networks:
             - airflownet
-    # prometheus:
-    #     image: prom/prometheus
-    #     container_name: airflow-prometheus
-    #     user: "0"
-    #     ports:
-    #         - 9090:9090
-    #     volumes:
-    #         - ./services/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    #         - ./services/prometheus/volume:/prometheus
-    #     networks:
-    #         - airflownet
-    # grafana:
-    #     image: grafana/grafana:7.1.5
-    #     container_name: airflow-grafana
-    #     environment:
-    #         GF_SECURITY_ADMIN_USER: admin
-    #         GF_SECURITY_ADMIN_PASSWORD: password
-    #         GF_PATHS_PROVISIONING: /grafana/provisioning
-    #     ports:
-    #         - 3000:3000
-    #     volumes:
-    #         - ./services/grafana/volume/data:/grafana
-    #         - ./services/grafana/volume/datasources:/grafana/datasources
-    #         - ./services/grafana/volume/dashboards:/grafana/dashboards
-    #         - ./services/grafana/volume/provisioning:/grafana/provisioning
-    #     networks:
-    #         - airflownet
-
 volumes:
-    postgres_data:
+  postgres_data:
 networks:
-    airflownet:
-      driver: bridge
-    
+  airflownet:
+    driver: bridge
