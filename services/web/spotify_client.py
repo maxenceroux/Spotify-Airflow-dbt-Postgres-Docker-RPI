@@ -37,6 +37,7 @@ class SpotifyClient:
         response = requests.request("GET", url, headers=headers)
         return response.text
         
+
     def get_user_recently_played(self, token, after):
         url = f"https://api.spotify.com/v1/me/player/recently-played?limit=50&after={after}"
         logging.warning(after)

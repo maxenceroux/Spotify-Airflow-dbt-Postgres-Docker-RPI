@@ -22,7 +22,7 @@ default_args = {
     'retry_delay': timedelta(seconds=1),
 }
 
-dag = DAG('get_spotify_songs', default_args=default_args,schedule_interval="*/20 * * * *",
+dag = DAG('get_spotify_songs',catchup=False, default_args=default_args,schedule_interval="*/20 * * * *",
     start_date=days_ago(1))
 # dag = DAG('get_spotify_songs', default_args=default_args,schedule_interval=None,
 #     start_date=days_ago(1))
