@@ -8,8 +8,12 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from fastapi_sqlalchemy import db
 from models import Song as ModelSong
 from models import User as ModelUser
+from models import Listen as ModelListen
+
 from schema import Song as SchemaSong
 from schema import User as SchemaUser
+from schema import Listen as SchemaListen
+
 from dotenv import load_dotenv
 import json
 from sqlalchemy import func, desc
@@ -61,11 +65,9 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     spotify_cli = SpotifyClient()
     logging.warning('collect token')
     token = get_token()
-    # ts = int(time.time())
-    # ts = db.session.query(ModelSong).order_by(desc('ts')).first().ts
     try:
         ts = int(datetime.timestamp(db.session.query(
-            ModelSong).order_by(desc('ts')).first().ts)*1000)
+            ModelListen).order_by(desc('ts')).first().ts)*1000)
     except: 
         ts = int(datetime.timestamp(datetime.now() - timedelta(days=5))*1000)
     songs = spotify_cli.get_user_recently_played(token, ts)
@@ -73,35 +75,8 @@ def get_songs(token: str = Depends(oauth2_scheme)):
         return {"msg": "no songs but success"}
     songs_schema = []
     for s in songs:
-        songs_schema.append(ModelSong(
-            artist=s['artist'], album_name=s['albums'], name=s['name'], ts=s['ts'], spotify_id=s['spotify_id']))
-    db.session.bulk_save_objects(songs_schema)
-    db.session.commit()
-    return songs_schema
-
-
-@app.get("/songs_20", status_code=200)
-def get_songs(token: str = Depends(oauth2_scheme)):
-
-    payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-    user = db.session.query(ModelUser).filter_by(
-        username=payload.get("user")).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Invalid username or password'
-        )
-
-    spotify_cli = SpotifyClient()
-    token = get_token()
-    ts = int(datetime.now().timestamp()*1000-20*60*1000)
-    songs = spotify_cli.get_user_recently_played(token, ts)
-    if not songs:
-        return {"msg": "no songs but success"}
-    songs_schema = []
-    for s in songs:
-        songs_schema.append(ModelSong(
-            artist=s['artist'], album_name=s['albums'], name=s['name'], ts=s['ts']))
+        songs_schema.append(ModelListen(
+            ts=s['ts'], spotify_id=s['spotify_id']))
     db.session.bulk_save_objects(songs_schema)
     db.session.commit()
     return songs_schema

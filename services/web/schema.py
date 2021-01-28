@@ -31,6 +31,5 @@ class User(BaseModel):
 class Listen(BaseModel):
     ts: datetime.datetime
     spotify_id: str
-    spotify_user_id: str
     class Config:
         orm_mode = True
