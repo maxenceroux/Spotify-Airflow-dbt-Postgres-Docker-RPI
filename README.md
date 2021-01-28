@@ -46,13 +46,15 @@ docker-compose -f docker-compose-arm.yml up --build
 
 ## Migrate with alembic
 ```bash 
-docker-compose run web alembic revision --autogenerate -m "First migration"
-docker-compose run web alembic upgrade head
+docker-compose -f docker-compose-<archi>.yml web alembic revision --autogenerate -m "First migration"
+docker-compose -f docker-compose-<archi>.yml run web alembic upgrade head
 ```
 # Usage
 
+**I presumed that you would run this on local; hence all urls point to localhost. If you run containers remotely change *localhost* to suitable IP**
+
 ## FastAPI
-1. Head to [localhost:1337/docs](localhost:1337/docs) once the containers are running. 
+1. Head to [localhost:1337/docs](localhost:8000/docs) once the containers are running. 
 2. Add your first user using /user endpoint and the aforementioned MY_USERNAME and MY_PASSWORD environment variables you set. 
 
 ## PGAdmin

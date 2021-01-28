@@ -13,7 +13,7 @@ from schema import User as SchemaUser
 from dotenv import load_dotenv
 import json
 from sqlalchemy import func, desc
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import logging
@@ -63,9 +63,11 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     token = get_token()
     # ts = int(time.time())
     # ts = db.session.query(ModelSong).order_by(desc('ts')).first().ts
-    ts = int(datetime.timestamp(db.session.query(
-        ModelSong).order_by(desc('ts')).first().ts)*1000)
-
+    try:
+        ts = int(datetime.timestamp(db.session.query(
+            ModelSong).order_by(desc('ts')).first().ts)*1000)
+    except: 
+        ts = int(datetime.timestamp(datetime.now() - timedelta(days=5))*1000)
     songs = spotify_cli.get_user_recently_played(token, ts)
     if not songs:
         return {"msg": "no songs but success"}
