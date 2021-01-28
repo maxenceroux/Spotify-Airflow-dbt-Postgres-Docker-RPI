@@ -11,6 +11,7 @@ from airflow.utils.dates import days_ago
 import os
 import json
 import requests
+import base64
 
 default_args = {
     'owner': 'rax',
@@ -25,7 +26,6 @@ default_args = {
 dag = DAG('get_song_info', default_args=default_args,schedule_interval=None,
     start_date=days_ago(1))
 
-
 dag.doc_md = __doc__
 
 
@@ -37,18 +37,33 @@ def get_untracked_songs(**context):
     songs = cursor.fetchall()
     songs_reformated = ""
     for s in songs:
-        songs_reformated = songs_reformated+f";{s[0]}"
+        songs_reformated = songs_reformated+f",{s[0]}"
     songs_reformated = songs_reformated[1:]
-    context['ti'].xcom_push(key="my_songs", value=songs)
+    context['ti'].xcom_push(key="my_songs", value=songs_reformated)
 
     return songs
+
+def get_spotify_token(**context):
+    url = "https://accounts.spotify.com/api/token"
+    credentials = os.environ['SPOTIPY_CLIENT_ID']+":"+os.environ['SPOTIPY_CLIENT_SECRET']
+    encoded_spotify_token = base64.b64encode(bytes(credentials, 'utf-8'))
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Authorization': f'Basic {encoded_spotify_token.decode("utf-8")}'
+    }
+    payload = {'grant_type':'client_credentials'}
+    response = requests.request("POST", url, headers=headers, data=payload)
+    context['ti'].xcom_push(key="spotify_token", value=response.json()['access_token'])
+    return response.json()['access_token']
+
 
 
 def get_songs_info(**context):
     song_ids = context['ti'].xcom_pull(key="my_songs")
-    token = json.loads(context['task_instance'].xcom_pull(task_ids='get_token'))['access_token']
-    print(token)
-    url = f"https://api.spotify.com/v1/audio-features/?id={song_ids}"
+    token =  context['ti'].xcom_pull(key="spotify_token")
+
+    url = f"https://api.spotify.com/v1/audio-features/?ids={song_ids}"
+
     headers = {
     'Accept': 'application/json',    
     'Content-Type': 'application/json',
@@ -57,22 +72,17 @@ def get_songs_info(**context):
     response = requests.request("GET", url, headers=headers)
     return response.json()
 
-
-    
 t1a = PythonOperator(
     task_id='get_songs',
     python_callable=get_untracked_songs,
     provide_context=True,
     dag = dag
 )
-t1b = SimpleHttpOperator(
-    task_id='get_token', 
-    method='POST', 
-    http_conn_id='spotify_api',
-    endpoint='token',
-    headers={"accept": "application/json", "Content-Type":"application/x-www-form-urlencoded"},
-    data={'username':'maxence','password':'maxence'},
-    xcom_push=True
+t1b = PythonOperator(
+    task_id='get_token',
+    python_callable=get_spotify_token,
+    provide_context=True,
+    dag = dag
 )
 
 
