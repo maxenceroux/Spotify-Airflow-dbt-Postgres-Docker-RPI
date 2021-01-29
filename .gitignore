@@ -7,3 +7,4 @@ target
 *.env
 *_first_migration.py
 *migrations.py
+.vscode
