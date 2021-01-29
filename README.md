@@ -46,7 +46,7 @@ docker-compose -f docker-compose-arm.yml up --build
 
 ## Migrate with alembic
 ```bash 
-docker-compose -f docker-compose-<archi>.yml web alembic revision --autogenerate -m "First migration"
+docker-compose -f docker-compose-<archi>.yml run web alembic revision --autogenerate -m "First migration"
 docker-compose -f docker-compose-<archi>.yml run web alembic upgrade head
 ```
 # Usage
