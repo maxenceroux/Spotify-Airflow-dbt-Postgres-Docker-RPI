@@ -17,7 +17,7 @@ class Song(Base):
     name = Column(String)
     album_name = Column(String)
     added_at = Column(DateTime)
-    spotify_id = Column(String)
+    spotify_id = Column(String, unique=True)
     danceability = Column(Float)
     energy = Column(Float)
     key = Column(Integer)

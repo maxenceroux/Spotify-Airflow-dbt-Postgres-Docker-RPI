@@ -14,10 +14,12 @@ from schema import Song as SchemaSong
 from schema import Songs as SchemaSongs
 from schema import User as SchemaUser
 from schema import Listen as SchemaListen
+from sqlalchemy.dialects.postgresql import insert
+
 
 from dotenv import load_dotenv
 import json
-from sqlalchemy import func, desc
+from sqlalchemy import func, desc, create_engine
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
@@ -80,20 +82,21 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     db.session.bulk_save_objects(songs_schema)
     db.session.commit()
     return songs_schema
-
-
+    
 @app.post("/song/", response_model=SchemaSongs)
 def create_song(song: SchemaSongs):
     songs_to_insert = []
-    for s in song.songs:
-        songs_to_insert.append(ModelSong(
-            artist=s.artist, album_name=s.album_name, name=s.name, added_at=datetime.now(), spotify_id=s.spotify_id,
-            danceability=s.danceability, energy=s.energy, key=s.key, loudness=s.loudness, mode=s.mode, speechiness=s.speechiness, 
-            acousticness=s.acousticness, instrumentalness=s.instrumentalness, liveness=s.liveness, valence=s.valence,
-            tempo=s.tempo, duration=s.duration, popularity=s.popularity
-        ))
-    db.session.bulk_save_objects(songs_to_insert)
-    db.session.commit()
+    engine = create_engine(os.environ['DATABASE_URL'])
+    with engine.connect() as conn:
+        for s in song.songs:
+                stmt = insert(ModelSong).values(artist=s.artist, album_name=s.album_name, name=s.name, added_at=datetime.now(), spotify_id=s.spotify_id,
+                            danceability=s.danceability, energy=s.energy, key=s.key, loudness=s.loudness, mode=s.mode, speechiness=s.speechiness, 
+                            acousticness=s.acousticness, instrumentalness=s.instrumentalness, liveness=s.liveness, valence=s.valence,
+                            tempo=s.tempo, duration=s.duration, popularity=s.popularity)
+                stmt = stmt.on_conflict_do_nothing(
+                    index_elements=['spotify_id']
+                )
+                conn.execute(stmt)
     return song
 
 
