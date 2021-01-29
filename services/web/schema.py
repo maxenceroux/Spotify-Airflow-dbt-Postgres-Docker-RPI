@@ -1,11 +1,11 @@
 from pydantic import BaseModel, SecretStr
 import datetime
+from typing import List
 
 class Song(BaseModel):
     artist: str
     name: str = None
     album_name: str = None
-    added_at: datetime.datetime
     spotify_id: str = None
     danceability: float = None
     energy: float = None
@@ -19,6 +19,11 @@ class Song(BaseModel):
     valence: float = None
     tempo: float = None
     duration: int = None
+    class Config:
+        orm_mode = True
+
+class Songs(BaseModel):
+    songs: List[Song]
     class Config:
         orm_mode = True
 

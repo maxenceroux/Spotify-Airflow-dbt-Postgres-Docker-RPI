@@ -33,7 +33,7 @@ def get_untracked_songs(**context):
     src = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
     src_conn = src.get_conn()
     cursor = src_conn.cursor()
-    cursor.execute("SELECT DISTINCT spotify_id FROM song where spotify_id IS NOT NULL;")
+    cursor.execute("SELECT DISTINCT spotify_id FROM listen where spotify_id IS NOT NULL;")
     songs = cursor.fetchall()
     songs_reformated = ""
     for s in songs:
@@ -59,9 +59,7 @@ def get_spotify_token(**context):
 def get_songs_info(**context):
     song_ids = context['ti'].xcom_pull(key="my_songs")
     token =  context['ti'].xcom_pull(key="spotify_token")
-
     url = f"https://api.spotify.com/v1/audio-features/?ids={song_ids}"
-
     headers = {
     'Accept': 'application/json',    
     'Content-Type': 'application/json',
@@ -89,12 +87,20 @@ def get_songs_info(**context):
     merged_li = []
     for i in range(len(features_list)):
         merged_li.append(dict(songs_list[i],**features_list[i]))
-    context['ti'].xcom_push(key="songs_info", value=merged_li)
-    return merged_li
+    for item in merged_li:
+        item['spotify_id'] = item.pop('id')
+        item['duration'] = item.pop('duration_ms')
+    merged_to_send = {"songs":merged_li}
+    context['ti'].xcom_push(key="songs_info", value=merged_to_send)
+    return merged_to_send
 
 def upload_to_pgsql(**context):
     songs = context['ti'].xcom_pull(key="songs_info")
-    return 2
+    url = "http://web:8000/song"
+    # headers={"accept": "application/json"}
+    response = requests.request("POST", url, data = json.dumps(songs))
+    print(songs)
+    return response.content
 
 t1a = PythonOperator(
     task_id='get_songs',
@@ -117,5 +123,11 @@ t2 = PythonOperator(
     dag = dag
 )
 
-t1a >> t2
-t1b >> t2
+t3 = PythonOperator(
+    task_id='upload_to_db',
+    python_callable=upload_to_pgsql,
+    provide_context=True,
+    dag=dag
+)
+t1a >> t2 >> t3
+t1b >> t2 >> t3

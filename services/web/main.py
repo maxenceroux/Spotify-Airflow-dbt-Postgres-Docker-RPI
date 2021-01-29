@@ -11,6 +11,7 @@ from models import User as ModelUser
 from models import Listen as ModelListen
 
 from schema import Song as SchemaSong
+from schema import Songs as SchemaSongs
 from schema import User as SchemaUser
 from schema import Listen as SchemaListen
 
@@ -81,14 +82,19 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     return songs_schema
 
 
-@app.post("/song/", response_model=SchemaSong)
-def create_song(song: SchemaSong):
-    db_song = ModelSong(
-        artist=song.artist, album_name=song.album_name, name=song.name, ts=song.ts
-    )
-    db.session.add(db_song)
+@app.post("/song/", response_model=SchemaSongs)
+def create_song(song: SchemaSongs):
+    songs_to_insert = []
+    for s in song.songs:
+        songs_to_insert.append(ModelSong(
+            artist=s.artist, album_name=s.album_name, name=s.name, added_at=datetime.now(), spotify_id=s.spotify_id,
+            danceability=s.danceability, energy=s.energy, key=s.key, loudness=s.loudness, mode=s.mode, speechiness=s.speechiness, 
+            acousticness=s.acousticness, instrumentalness=s.instrumentalness, liveness=s.liveness, valence=s.valence,
+            tempo=s.tempo, duration=s.duration
+        ))
+    db.session.bulk_save_objects(songs_to_insert)
     db.session.commit()
-    return db_song
+    return song
 
 
 @app.post("/user/", response_model=SchemaUser)
