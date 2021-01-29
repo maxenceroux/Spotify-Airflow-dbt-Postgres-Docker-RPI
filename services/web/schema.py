@@ -19,6 +19,7 @@ class Song(BaseModel):
     valence: float = None
     tempo: float = None
     duration: int = None
+    popularity: int = None
     class Config:
         orm_mode = True
 

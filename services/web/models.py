@@ -30,7 +30,7 @@ class Song(Base):
     valence = Column(Float)
     tempo = Column(Float)
     duration = Column(Integer)
-
+    popularity = Column(Integer)
 
 
 class User(Base):

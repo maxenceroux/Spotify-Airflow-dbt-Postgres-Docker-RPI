@@ -90,7 +90,7 @@ def create_song(song: SchemaSongs):
             artist=s.artist, album_name=s.album_name, name=s.name, added_at=datetime.now(), spotify_id=s.spotify_id,
             danceability=s.danceability, energy=s.energy, key=s.key, loudness=s.loudness, mode=s.mode, speechiness=s.speechiness, 
             acousticness=s.acousticness, instrumentalness=s.instrumentalness, liveness=s.liveness, valence=s.valence,
-            tempo=s.tempo, duration=s.duration
+            tempo=s.tempo, duration=s.duration, popularity=s.popularity
         ))
     db.session.bulk_save_objects(songs_to_insert)
     db.session.commit()
