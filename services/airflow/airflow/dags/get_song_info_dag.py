@@ -94,7 +94,7 @@ def get_songs_info(**context):
 
 def upload_to_pgsql(**context):
     songs = context['ti'].xcom_pull(key="songs_info")
-    
+    return 2
 
 t1a = PythonOperator(
     task_id='get_songs',
