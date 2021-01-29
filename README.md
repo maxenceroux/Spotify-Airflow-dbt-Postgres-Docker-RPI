@@ -18,19 +18,30 @@ Once that app is created, you'll be given a client id and a client secret.
 
 Add your credentials to the following files :  
 - .env 
-    - SPOTIPY_CLIENT_ID : client id as created above
-    - SPOTIPY_CLIENT_SECRET : client secret as created above
-    - SPOTIFY_USER : your Spotify email address (needed for web scrapping)
-    - SPOTIFY_PWD : your Spotify password (needed for web scrapping)
-    
-- services/web/.env
-    - SPOTIPY_CLIENT_ID : client id as created above
-    - SPOTIPY_CLIENT_SECRET : client secret as created above
-    - SPOTIFY_USER : your Spotify email address (needed for web scrapping)
-    - SPOTIFY_PWD : your Spotify password (needed for web scrapping)
-- docker-compose.yml (under airflow environment variables )
-    - MY_USERNAME : random username that will be used to authorize your API calls
-    - MY_PASSWORD : random password that will be used to authorize your API calls
+    - SPOTIPY_CLIENT_ID=< client id as created above >
+    - SPOTIPY_CLIENT_SECRET=< client secret as created above >
+    - SPOTIFY_USER=< your Spotify email address (needed for web scrapping) >
+    - SPOTIFY_PWD=< your Spotify password (needed for web scrapping) >
+    - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432
+    - DBT_PROFILES_DIR=/services/airflow/dbt
+    - AIRFLOW_HOME=/services/airflow/airflow
+    - AIRFLOW__CORE__DAGS_FOLDER=/services/airflow/airflow/dags
+    - AIRFLOW__CORE__PARALLELISM=4
+    - AIRFLOW__CORE__DAG_CONCURRENCY=4
+    - AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=4
+    - POSTGRES_USER=airflowuser
+    - POSTGRES_PASSWORD=pssd
+    - POSTGRES_HOST=postgres-airflow
+    - POSTGRES_PORT=5433
+    - POSTGRES_DB=airflowdb
+    - DBT_POSTGRES_PASSWORD=postgres
+    - DBT_POSTGRES_USER=postgres
+    - DBT_POSTGRES_DB=postgres
+    - DBT_DBT_SCHEMA=test
+    - DBT_DBT_RAW_DATA_SCHEMA=public
+    - DBT_POSTGRES_HOST=db
+    - MY_USERNAME=< your username >
+    - MY_PASSWORD=< your password >
 
 
 ## Run Docker-Compose
