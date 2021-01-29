@@ -33,7 +33,13 @@ def get_untracked_songs(**context):
     src = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
     src_conn = src.get_conn()
     cursor = src_conn.cursor()
-    cursor.execute("SELECT DISTINCT spotify_id FROM listen where spotify_id IS NOT NULL;")
+    cursor.execute("SELECT max(added_at) from song;")
+    try:
+        cursor.execute("SELECT max(added_at) from song;")
+        ts = cursor.fetchone()[0]
+    except:
+        ts = datetime.now() - timedelta(years=5)
+    cursor.execute(f"SELECT DISTINCT spotify_id FROM listen where spotify_id IS NOT NULL and ts >= '{ts}';")
     songs = cursor.fetchall()
     songs_reformated = ""
     for s in songs:
@@ -66,30 +72,32 @@ def get_songs_info(**context):
     'Authorization': f'Bearer {token}'
     }
     response = requests.request("GET", url, headers=headers)
-    res = response.json()['audio_features']
+    res = response.json()['audio_features'] 
     keys_to_remove = ['analysis_url', 'type',  'uri', 'track_href', 'time_signature']
     features_list = []
-    for song in res:
-        for key in keys_to_remove:
-            song.pop(key)
-        features_list.append(song)
-    url = f"https://api.spotify.com/v1/tracks?ids={song_ids}"
-    response = requests.request("GET", url, headers=headers)
-    res = response.json()['tracks']
-    songs_list = []
-    for song in res: 
-        songs_list.append({
-            "album_name": song['album']['name'],
-            "artist": song['album']['artists'][0]['name'],
-            "name": song['name'],
-            "id": song['id']
-        })
-    merged_li = []
-    for i in range(len(features_list)):
-        merged_li.append(dict(songs_list[i],**features_list[i]))
-    for item in merged_li:
-        item['spotify_id'] = item.pop('id')
-        item['duration'] = item.pop('duration_ms')
+    if res[0]!=None:
+        for song in res:
+            for key in keys_to_remove:
+                song.pop(key)
+            features_list.append(song)
+        url = f"https://api.spotify.com/v1/tracks?ids={song_ids}"
+        response = requests.request("GET", url, headers=headers)
+        res = response.json()['tracks']
+        songs_list = []
+        for song in res: 
+            songs_list.append({
+                "album_name": song['album']['name'],
+                "artist": song['album']['artists'][0]['name'],
+                "name": song['name'],
+                "id": song['id']
+            })
+        merged_li = []
+        for i in range(len(features_list)):
+            merged_li.append(dict(songs_list[i],**features_list[i]))
+        for item in merged_li:
+            item['spotify_id'] = item.pop('id')
+            item['duration'] = item.pop('duration_ms')
+    else: merged_li = []
     merged_to_send = {"songs":merged_li}
     context['ti'].xcom_push(key="songs_info", value=merged_to_send)
     return merged_to_send
