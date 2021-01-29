@@ -33,12 +33,10 @@ def get_untracked_songs(**context):
     src = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
     src_conn = src.get_conn()
     cursor = src_conn.cursor()
+    cursor.execute("SELECT max(added_at) from song;")    
     cursor.execute("SELECT max(added_at) from song;")
-    try:
-        cursor.execute("SELECT max(added_at) from song;")
-        ts = cursor.fetchone()[0]
-    except:
-        ts = datetime.now() - timedelta(years=5)
+    if cursor.fetchone()[0] != None: ts = cursor.fetchone()[0]
+    else: ts = datetime.now() - timedelta(days=720)
     cursor.execute(f"SELECT DISTINCT spotify_id FROM listen where spotify_id IS NOT NULL and ts >= '{ts}';")
     songs = cursor.fetchall()
     songs_reformated = ""
@@ -89,7 +87,8 @@ def get_songs_info(**context):
                 "album_name": song['album']['name'],
                 "artist": song['album']['artists'][0]['name'],
                 "name": song['name'],
-                "id": song['id']
+                "id": song['id'],
+                "popularity": song['popularity']
             })
         merged_li = []
         for i in range(len(features_list)):
