@@ -23,7 +23,7 @@ default_args = {
     'retry_delay': timedelta(seconds=1),
 }
 
-dag = DAG('get_song_info', default_args=default_args,schedule_interval=None,
+dag = DAG('get_song_info',catchup=False,default_args=default_args,schedule_interval='0 */6 * * *',
     start_date=days_ago(1))
 
 dag.doc_md = __doc__
