@@ -36,9 +36,6 @@ def get_untracked_songs(**context):
     cursor = src_conn.cursor()
     cursor.execute("SELECT max(added_at) from song;")  
     last_exec_ts = cursor.fetchone()[0]
-    ts_last_track_added = Variable.get("last_track_added")
-    if not ts_last_track_added:
-        ts_last_track_added = datetime.now() - timedelta(days=720)
     if last_exec_ts == None: 
         last_exec_ts = datetime.now() - timedelta(days=720)
     cursor.execute(f"SELECT DISTINCT spotify_id FROM listen where spotify_id IS NOT NULL and ts >= '{last_exec_ts}' ; ")
