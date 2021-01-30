@@ -1,16 +1,39 @@
 from fastapi.testclient import TestClient
+import requests
+import json
 from main import app
 client = TestClient(app)
 
-def test_get_token():
+def get_token():
+    url = "http://web:8000/token"
+    heade={'accept': 'application/json'},
+    data={'username':'maxence','password':'maxence'}
+    response = requests.request("POST", headers=heade[0], data=data, url=url)
+    return response.json()['access_token']
+
+def test_get_token_authorized():
     response = client.post(
         "/token",
-        headers={"accept":"application/json"},
-        json={
-            "username":"maxence",
-            "password":"maxence"
-        })
+        data={'username':'maxence','password':'maxence'})
     assert response.status_code == 200
+    assert 'access_token' in response.json()
+
+def test_get_token_unauthorized():
+    response = client.post(
+        "/token",
+        data={'username':'maxime','password':'maxime'})
+    assert response.status_code == 200
+    assert 'error' in response.json()
+    assert response.json()['error'] == 'invalid credentials'
+
+def test_get_songs():
+    token = get_token()
+    response = client.get(
+        "/songs",
+        headers = {"Authorization": f"Bearer {token}"}
+    )
+    assert response.status_code == 200
+    assert "msg" in response.json()
 
 def test_post_song():
     response = client.post(
@@ -19,7 +42,7 @@ def test_post_song():
         json={
             "songs": [
                 {
-                "artist": "string",
+                "artist": "maxence",
                 "name": "string",
                 "album_name": "string",
                 "spotify_id": "string",
@@ -39,3 +62,4 @@ def test_post_song():
                 }
             ]
             })
+    assert response.json() == {"ds,":"sd,o"}

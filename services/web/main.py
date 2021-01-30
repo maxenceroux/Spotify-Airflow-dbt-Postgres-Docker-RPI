@@ -81,9 +81,9 @@ def get_songs(token: str = Depends(oauth2_scheme)):
             ts=s['ts'], spotify_id=s['spotify_id']))
     db.session.bulk_save_objects(songs_schema)
     db.session.commit()
-    return songs_schema
+    return {"msg": "uploaded songs", "songs": songs_schema}
     
-@app.post("/song/", response_model=SchemaSongs)
+@app.post("/song/", response_model=SchemaSongs, status_code=200)
 def create_song(song: SchemaSongs):
     songs_to_insert = []
     engine = create_engine(os.environ['DATABASE_URL'])
