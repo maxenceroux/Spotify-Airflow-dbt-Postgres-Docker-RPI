@@ -1,0 +1,20 @@
+name: My first action hello world
+on:
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+      - main
+      - testing
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hello world"
