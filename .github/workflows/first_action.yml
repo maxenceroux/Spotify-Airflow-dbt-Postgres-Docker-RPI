@@ -55,7 +55,7 @@ jobs:
 
       - name: add user
         run: |
-          curl -d '{"username":"maxence", "username":"maxence"}' -H "Content-Type: application/json" -X POST http://web:8000/user
+          curl -d '{"username":"maxence", "username":"maxence"}' -H "Content-Type: application/json" -X POST http://localhost:8000/user
 
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
