@@ -17,4 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: echo "Hello world"
+      - name: build 
+        run: docker-compose -f docker-compose-amd.yml build
+      - name: test
+        run: docker-compose -f docker-compose-amd.yml run web pytest
