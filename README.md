@@ -102,3 +102,9 @@ Head to PGAdmin and query song table to assert that songs are indeed inserted to
 Once songs are added to the table, you could launch *most_listened* DAG. 
 Turn it on and trigger the DAG. 
 Once completed, head back to PGAdmin, you should now see a new schema under your postgres DB called *test* (Note to myself to change name). *daily_most_listened* table is created with your top 5 most listened artists. Once again name is misleading as it is not trigger daily (but it could be!). 
+
+# Test your app
+## API routes
+```bash
+docker-compose -f docker-compose-<arch>.yml run web pytest
+```
