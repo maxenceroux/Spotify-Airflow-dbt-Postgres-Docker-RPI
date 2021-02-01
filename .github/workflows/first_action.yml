@@ -53,7 +53,7 @@ jobs:
       - name: ps
         run: docker ps
 
-        - name: add user
+      - name: add user
         run: |
           curl -d '{"username":"maxence", "username":"maxence"}' -H "Content-Type: application/json" -X POST http://localhost:8000/user
 
