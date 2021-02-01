@@ -48,6 +48,8 @@ jobs:
           echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
       - name: build 
         run: docker-compose -f docker-compose-amd.yml up --build -d
+      - name: sleep
+        run: sleep 30
       - name: add user
         run: |
           curl -d '{"username":"maxence", "username":"maxence"}' -H "Content-Type: application/json" -X POST http://web:8000/user
