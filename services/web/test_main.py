@@ -3,9 +3,10 @@ import requests
 import json
 from main import app
 client = TestClient(app)
-
+# un nouveau test
 def get_token():
     url = "http://web:8000/token"
+    print(1)
     heade={'accept': 'application/json'},
     data={'username':'maxence','password':'maxence'}
     response = requests.request("POST", headers=heade[0], data=data, url=url)
