@@ -18,6 +18,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: create env file
+        run: |
+          touch .env
+          echo ${{ secrets.MY_PASSWORD}}
+          echo MY_PASSWORD=${{ secrets.MY_PASSWORD }} >> .env
       - name: build 
         run: docker-compose -f docker-compose-amd.yml build
       - name: test
