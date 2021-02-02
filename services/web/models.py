@@ -4,11 +4,13 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 Base = declarative_base()
 
+
 class Listen(Base):
     __tablename__ = "listen"
     id = Column(Integer, primary_key=True, index=True)
     ts = Column(DateTime)
     spotify_id = Column(String)
+
 
 class Song(Base):
     __tablename__ = "song"
