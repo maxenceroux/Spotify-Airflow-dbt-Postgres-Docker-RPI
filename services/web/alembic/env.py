@@ -23,7 +23,6 @@ logging.warning(os.environ["DATABASE_URL"])
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
-
 import models
 # add your model's MetaData object here
 # for 'autogenerate' support
