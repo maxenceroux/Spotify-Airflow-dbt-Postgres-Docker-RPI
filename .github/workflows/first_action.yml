@@ -47,7 +47,7 @@ jobs:
           echo MY_USERNAME=${{ secrets.POSTGRES_HOST}} >> .env
           echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
       - name: build 
-        run: docker-compose -f docker-compose-amd.yml up --build 
+        run: docker-compose -f docker-compose-amd.yml up --build -d
       - name: sleep
         run: sleep 30
       - name: ps
