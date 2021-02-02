@@ -63,3 +63,12 @@ jobs:
 
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.RPI_USERNAME }}
+          password: ${{ secrets.RPI_PASSWORD }}
+          port: ${{ secrets.RPI_PORT }}
+          script: deploy-rpi.sh
