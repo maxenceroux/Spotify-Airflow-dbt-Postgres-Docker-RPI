@@ -49,7 +49,7 @@ jobs:
       - name: build 
         run: docker-compose -f docker-compose-amd.yml up --build -d
       - name: sleep
-        run: sleep 30
+        run: sleep 10
       - name: ps
         run: docker ps
       - name: init migration
