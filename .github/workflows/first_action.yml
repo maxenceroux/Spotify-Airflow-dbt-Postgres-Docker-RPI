@@ -58,7 +58,8 @@ jobs:
         run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
       - name: add user
         run: |
-          curl -d '{"username":"maxence", "username":"maxence"}' -H "Content-Type: application/json" -X POST http://localhost:8000/user
+          curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
+
 
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
