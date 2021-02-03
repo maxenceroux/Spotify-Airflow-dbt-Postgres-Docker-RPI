@@ -62,7 +62,7 @@ jobs:
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
       - name: install sshpass
-        run: apt-get install sshpass
+        run: sudo apt-get install sshpass
       - name: generate key
         run: ssh-keygen -q -t rsa -N '' <<< ""$'\n'"y" 2>&1 >/dev/null
       - name: send key to rpi
