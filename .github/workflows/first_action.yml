@@ -59,11 +59,8 @@ jobs:
       - name: add userss
         run: |
           curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
-
-
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
-
       - name: install sshpass
         run: apt-get install sshpass
       - name: generate key
