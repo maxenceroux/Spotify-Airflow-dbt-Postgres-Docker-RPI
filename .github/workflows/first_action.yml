@@ -61,14 +61,14 @@ jobs:
           curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
-      - name: install sshpass
-        run: apt-get install sshpass
-      - name: generate key
-        run: ssh-keygen -q -t rsa -N '' <<< ""$'\n'"y" 2>&1 >/dev/null
-      - name: send key to rpi
-        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh-copy-id -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} <<< ""$'\n'"y"[B
-      - name: ssh into rpi
-        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} echo "hello from rpi"
+      # - name: install sshpass
+      #   run: apt-get install sshpass
+      # - name: generate key
+      #   run: ssh-keygen -q -t rsa -N '' <<< ""$'\n'"y" 2>&1 >/dev/null
+      # - name: send key to rpi
+      #   run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh-copy-id -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} <<< ""$'\n'"y"[B
+      # - name: ssh into rpi
+      #   run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} echo "hello from rpi"
       
             
       
