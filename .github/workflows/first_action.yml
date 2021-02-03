@@ -64,11 +64,15 @@ jobs:
       - name: test
         run: docker-compose -f docker-compose-amd.yml run web pytest
 
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.RPI_USERNAME }}
-          password: ${{ secrets.RPI_PASSWORD }}
-          port: ${{ secrets.RPI_PORT }}
-          script: deploy-rpi.sh
+      - name: install sshpass
+        run: apt-get install sshpass
+      - name: generate key
+        run: ssh-keygen -q -t rsa -N '' <<< ""$'\n'"y" 2>&1 >/dev/null
+      - name: send key to rpi
+        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh-copy-id -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} <<< ""$'\n'"y"[B
+      - name: ssh into rpi
+        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} echo "hello from rpi"
+      
+            
+      
+      
