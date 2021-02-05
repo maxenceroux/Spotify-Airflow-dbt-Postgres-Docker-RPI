@@ -9,7 +9,7 @@ services:
         build: 
           context: ./services/web
           dockerfile: Dockerfile.arm
-        
+        platform: linux/arm64
         command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
         ports:
             - 8000:8000
@@ -71,6 +71,7 @@ services:
         context: ./services/airflow
         dockerfile: Dockerfile.arm
       restart: always
+      platform: linux/arm64
       env_file:
         - .env
       depends_on: 
