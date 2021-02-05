@@ -108,3 +108,8 @@ Once completed, head back to PGAdmin, you should now see a new schema under your
 ```bash
 docker-compose -f docker-compose-<arch>.yml run web pytest
 ```
+
+# Deploy 
+1. Login to docker hub
+```bash
+docker login --username=<your_username> --password=<your_password>

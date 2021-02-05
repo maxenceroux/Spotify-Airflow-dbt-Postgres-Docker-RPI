@@ -23,6 +23,8 @@ services:
           - .:/usr/src/app
         networks:
             - airflownet
+        image: maxenceroux/spotify_web_arm:latest
+
     db:
         image: arm32v7/postgres
         ports:
@@ -80,6 +82,7 @@ services:
         - ./services/airflow/airflow:/services/airflow/airflow
       networks:
         - airflownet
+      image: maxenceroux/airflow_arm:latest
     statsd-exporter:
         image: prom/statsd-exporter
         container_name: airflow-statsd-exporter
