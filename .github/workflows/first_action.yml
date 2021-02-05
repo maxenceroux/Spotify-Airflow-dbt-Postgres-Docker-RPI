@@ -76,7 +76,7 @@ jobs:
           sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@${{ secrets.HOST }} "docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD}}"
       - name: run docker from rpi
         run: |
-          sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@${{ secrets.HOST }} "sh /home/pi/project/test_prod/deploy-rpi.sh"
+          sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@${{ secrets.HOST }} "sh /home/pi/project/test_prod/deploy.sh"
       
             
       
