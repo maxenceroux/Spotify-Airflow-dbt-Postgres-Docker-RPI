@@ -61,7 +61,7 @@ jobs:
       #     curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
       # - name: test
       #   run: docker-compose -f docker-compose-amd.yml run web pytest
-      # - name: login to docker hub
+      - name: login to docker hub
         run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD}}      
       - name: push to docker hub
         run: docker-compose -f docker-compose-arm.yml push
