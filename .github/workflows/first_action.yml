@@ -18,49 +18,49 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: create env files
-        run: |
-          touch .env
-          echo ${{ secrets.MY_PASSWORD}}
-          echo SPOTIPY_CLIENT_ID=${{ secrets.SPOTIPY_CLIENT_ID}} >> .env
-          echo SPOTIPY_CLIENT_SECRET=${{ secrets.SPOTIPY_CLIENT_SECRET}} >> .env
-          echo SPOTIFY_USER=${{ secrets.SPOTIFY_USER}} >> .env
-          echo SPOTIFY_PWD=${{ secrets.SPOTIFY_PWD}} >> .env
-          echo DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432 >> .env
-          echo DBT_PROFILES_DIR=/services/airflow/dbt >> .env
-          echo AIRFLOW_HOME=/services/airflow/airflow >> .env
-          echo AIRFLOW__CORE__DAGS_FOLDER=/services/airflow/airflow/dags >> .env
-          echo AIRFLOW__CORE__PARALLELISM=4 >> .env
-          echo AIRFLOW__CORE__DAG_CONCURRENCY=4 >> .env
-          echo AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=${{ secrets.AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG}} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER}} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD}} >> .env
-          echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST}} >> .env
-          echo POSTGRES_PORT=5433 >> .env
-          echo POSTGRES_DB=airflowdb >> .env
-          echo DBT_POSTGRES_PASSWORD=${{ secrets.POSTGRES_HOST}} >> .env
-          echo DBT_POSTGRES_USER=postgres >> .env
-          echo DBT_POSTGRES_DB=postgres >> .env
-          echo DBT_DBT_SCHEMA=test >> .env
-          echo DBT_DBT_RAW_DATA_SCHEMA=public >> .env
-          echo DBT_POSTGRES_HOST=db >> .env
-          echo MY_USERNAME=${{ secrets.POSTGRES_HOST}} >> .env
-          echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
-      - name: build 
-        run: docker-compose -f docker-compose-amd.yml up --build -d
-      - name: sleep
-        run: sleep 20
-      - name: ps
-        run: docker ps
-      - name: init migration
-        run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
-      - name: migrate
-        run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
-      - name: add userss
-        run: |
-          curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
-      - name: test
-        run: docker-compose -f docker-compose-amd.yml run web pytest
+      # - name: create env files
+      #   run: |
+      #     touch .env
+      #     echo ${{ secrets.MY_PASSWORD}}
+      #     echo SPOTIPY_CLIENT_ID=${{ secrets.SPOTIPY_CLIENT_ID}} >> .env
+      #     echo SPOTIPY_CLIENT_SECRET=${{ secrets.SPOTIPY_CLIENT_SECRET}} >> .env
+      #     echo SPOTIFY_USER=${{ secrets.SPOTIFY_USER}} >> .env
+      #     echo SPOTIFY_PWD=${{ secrets.SPOTIFY_PWD}} >> .env
+      #     echo DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432 >> .env
+      #     echo DBT_PROFILES_DIR=/services/airflow/dbt >> .env
+      #     echo AIRFLOW_HOME=/services/airflow/airflow >> .env
+      #     echo AIRFLOW__CORE__DAGS_FOLDER=/services/airflow/airflow/dags >> .env
+      #     echo AIRFLOW__CORE__PARALLELISM=4 >> .env
+      #     echo AIRFLOW__CORE__DAG_CONCURRENCY=4 >> .env
+      #     echo AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG=${{ secrets.AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG}} >> .env
+      #     echo POSTGRES_USER=${{ secrets.POSTGRES_USER}} >> .env
+      #     echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD}} >> .env
+      #     echo POSTGRES_HOST=${{ secrets.POSTGRES_HOST}} >> .env
+      #     echo POSTGRES_PORT=5433 >> .env
+      #     echo POSTGRES_DB=airflowdb >> .env
+      #     echo DBT_POSTGRES_PASSWORD=${{ secrets.POSTGRES_HOST}} >> .env
+      #     echo DBT_POSTGRES_USER=postgres >> .env
+      #     echo DBT_POSTGRES_DB=postgres >> .env
+      #     echo DBT_DBT_SCHEMA=test >> .env
+      #     echo DBT_DBT_RAW_DATA_SCHEMA=public >> .env
+      #     echo DBT_POSTGRES_HOST=db >> .env
+      #     echo MY_USERNAME=${{ secrets.POSTGRES_HOST}} >> .env
+      #     echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
+      # - name: build 
+      #   run: docker-compose -f docker-compose-amd.yml up --build -d
+      # - name: sleep
+      #   run: sleep 20
+      # - name: ps
+      #   run: docker ps
+      # - name: init migration
+      #   run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
+      # - name: migrate
+      #   run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
+      # - name: add userss
+      #   run: |
+      #     curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
+      # - name: test
+      #   run: docker-compose -f docker-compose-amd.yml run web pytest
       - name: install sshpass
         run: sudo apt-get install sshpass
       - name: generate key
