@@ -47,22 +47,24 @@ jobs:
           echo MY_USERNAME=${{ secrets.POSTGRES_HOST}} >> .env
           echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
       - name: build 
-        run: docker-compose -f docker-compose-arm.yml up --build -d
+        run: docker-compose -f docker-compose-amd.yml up --build -d
       - name: sleep
         run: sleep 20
       - name: ps
         run: docker ps
-      # - name: init migration
-      #   run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
-      # - name: migrate
-      #   run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
-      # - name: add users
-      #   run: |
-      #     curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
-      # - name: test
-      #   run: docker-compose -f docker-compose-amd.yml run web pytest
-      # - name: login to docker hub
-      #   run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD}}      
+      - name: init migration
+        run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
+      - name: migrate
+        run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
+      - name: add users
+        run: |
+          curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
+      - name: test
+        run: docker-compose -f docker-compose-amd.yml run web pytest
+      - name: login to docker hub
+        run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD}}      
+      - name: push to docker hub
+        run: docker-compose push
       # - name: install sshpass
       #   run: sudo apt-get install sshpass
       # - name: generate key
