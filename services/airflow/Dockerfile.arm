@@ -1,4 +1,5 @@
-FROM arm32v7/python:3.8
+#FROM arm32v7/python:3.8
+FROM python:3.8
 RUN pip install apache-airflow[postgres]==1.10.12 \
  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-1.10.12/constraints-3.7.txt"
 RUN pip install dbt && pip install statsd
