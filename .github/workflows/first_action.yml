@@ -68,7 +68,7 @@ jobs:
       - name: send keys to rpi
         run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh-copy-id -o StrictHostKeyChecking=no -p 666 pi@${{ secrets.HOST }} <<< ""$'\n'"y"[B
       - name: ssh into rpi
-        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@{{ secrets.HOST }} echo "hello from rpi"
+        run: sshpass -p "${{ secrets.RPI_PASSWORD}}" ssh -o StrictHostKeyChecking=no -p 666 pi@${{ secrets.HOST }} echo "hello from rpi"
       
             
       
