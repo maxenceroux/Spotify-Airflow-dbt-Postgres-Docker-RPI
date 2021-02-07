@@ -73,9 +73,6 @@ services:
         - statsd-exporter
       ports:
         - 7777:8080
-      # volumes: 
-      #   - ./services/airflow/dbt:/services/airflow/dbt
-      #   - ./services/airflow/airflow:/services/airflow/airflow
       networks:
         - airflownet
     statsd-exporter:
