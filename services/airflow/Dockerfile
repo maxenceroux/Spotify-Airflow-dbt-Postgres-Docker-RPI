@@ -1,4 +1,4 @@
-FROM maxenceroux/airflow
+FROM maxenceroux/airflow:latest
 
 RUN mkdir /airflow
 COPY airflow/ /airflow/
