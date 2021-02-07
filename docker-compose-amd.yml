@@ -6,9 +6,6 @@ services:
         networks:
             - airflownet
     web:
-        build: 
-          context: ./services/web
-          dockerfile: Dockerfile.amd
         command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
         ports:
             - 8000:8000
@@ -65,9 +62,6 @@ services:
         networks:
           - airflownet
     airflow:
-      build: 
-        context: ./services/airflow
-        dockerfile: Dockerfile.amd
       restart: always
       env_file:
         - .env
@@ -81,7 +75,7 @@ services:
         - ./services/airflow/airflow:/services/airflow/airflow
       networks:
         - airflownet
-      image: maxenceroux/airflow:latest
+      image: maxenceroux/airflow-rpi:latest
     statsd-exporter:
         image: prom/statsd-exporter
         container_name: airflow-statsd-exporter
