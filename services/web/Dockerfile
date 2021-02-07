@@ -1,5 +1,5 @@
 # pull official base image
-FROM maxenceroux/spotify-web:amd
+FROM maxenceroux/spotify-web
 # set work directory
 WORKDIR /usr/src/app/
 
