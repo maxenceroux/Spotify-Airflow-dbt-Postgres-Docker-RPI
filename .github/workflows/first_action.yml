@@ -69,7 +69,7 @@ jobs:
       - name: build web and push to docker
         run: cd ./services/web && docker buildx build --platform linux/amd64,linux/arm/v7 -t maxenceroux/spotify-web-with-code --push .
       - name: build airflow and push to docker 
-        run: cd ../airflow && docker buildx build --platform linux/amd64,linux/arm/v7 -t maxenceroux/airflow-with-dags --push .
+        run: cd ./services/airflow && docker buildx build --platform linux/amd64,linux/arm/v7 -t maxenceroux/airflow-with-dags --push .
       - name: install sshpass
         run: sudo apt-get install sshpass
       - name: generate key
