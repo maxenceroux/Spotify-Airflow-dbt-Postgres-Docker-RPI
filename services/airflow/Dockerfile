@@ -7,6 +7,5 @@ RUN mkdir /dbt
 ADD dbt/ /dbt/
 
 ADD scripts/ /project/scripts/
-RUN ls 
 RUN chmod +x /project/scripts/init.sh
 ENTRYPOINT [ "/project/scripts/init.sh" ]
