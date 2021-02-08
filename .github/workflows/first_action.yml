@@ -51,6 +51,8 @@ jobs:
         run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
       - name: migrate
         run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
+      - name: run containers for test
+        run: docker-compose -f docker-compose-amd.yml up --build -d
       - name: add users
         run: |
           curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
