@@ -64,6 +64,8 @@ jobs:
         run: export DOCKER_CLI_EXPERIMENTAL=enabled
       - name: login to docker hub
         run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD}}      
+      - name: create builder
+        run: docker buildx create --name builder_multi_arch && docker buildx use builder_multi_arch
       - name: build web and push to docker
         run: cd ./services/web && docker buildx build --platform linux/amd64,linux/arm/v7 -t maxenceroux/spotify-web-with-code --push .
       - name: build airflow and push to docker 
