@@ -1,12 +1,12 @@
 FROM maxenceroux/airflow:latest
 
 RUN mkdir /airflow
-COPY airflow/ /airflow/
+ADD airflow/ /airflow/
 
 RUN mkdir /dbt
-COPY dbt/ /dbt/
+ADD dbt/ /dbt/
 
-COPY scripts/ /project/scripts/
-
+ADD scripts/ /project/scripts/
+RUN ls 
 RUN chmod +x /project/scripts/init.sh
 ENTRYPOINT [ "/project/scripts/init.sh" ]
