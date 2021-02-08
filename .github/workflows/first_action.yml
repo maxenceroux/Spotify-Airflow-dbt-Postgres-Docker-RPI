@@ -52,7 +52,9 @@ jobs:
       - name: migrate
         run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
       - name: run containerss for test
-        run: docker-compose -f docker-compose-amd.yml up --build 
+        run: docker-compose -f docker-compose-amd.yml up --build -d
+      - name: wait 30s
+        run: sleep 30
       - name: add users
         run: |
           curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
