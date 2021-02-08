@@ -51,7 +51,7 @@ jobs:
         run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
       - name: migrate
         run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
-      - name: run containers for test
+      - name: run containerss for test
         run: docker-compose -f docker-compose-amd.yml up --build 
       - name: add users
         run: |
