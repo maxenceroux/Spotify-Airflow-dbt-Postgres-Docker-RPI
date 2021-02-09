@@ -50,7 +50,7 @@ jobs:
       - name: run containerss for test
         run: docker-compose -f docker-compose-amd.yml up --build -d
       - name: wait 30s
-        run: sleep 30
+        run: sleep 20
 
       - name: init migration
         run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
