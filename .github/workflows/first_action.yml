@@ -47,15 +47,16 @@ jobs:
           echo DBT_POSTGRES_HOST=db >> .env
           echo MY_USERNAME=${{ secrets.POSTGRES_HOST}} >> .env
           echo MY_PASSWORD=${{ secrets.MY_PASSWORD}} >> .env
+      - name: run containerss for test
+        run: docker-compose -f docker-compose-amd.yml up --build -d
+      - name: wait 30s
+
       - name: init migration
         run: docker-compose -f docker-compose-amd.yml run web alembic revision --autogenerate -m "First migration"
       - name: ls 
         run: ls
       - name: migrate
         run: docker-compose -f docker-compose-amd.yml run web alembic upgrade head
-      - name: run containerss for test
-        run: docker-compose -f docker-compose-amd.yml up --build -d
-      - name: wait 30s
         run: sleep 30
       - name: add users
         run: |
