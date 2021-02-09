@@ -38,16 +38,18 @@ class SpotifyClient:
         return response.text
 
     def get_user_recently_played(self, token, after):
-        url = f"""https://api.spotify.com/v1/me/player/recently-played?limit=50
-                &after={after}"""
+        url = f"""https://api.spotify.com/v1/me/player/recently-played?
+            &after={after}"""
         logging.warning(after)
         logging.warning(url)
+        logging.warning(token)
         headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Authorization': f'Bearer {token}'
         }
         response = requests.request("GET", url, headers=headers)
+        logging.warning(response.json())
         if "items" not in response.json():
             return False
         songs = response.json()['items']
