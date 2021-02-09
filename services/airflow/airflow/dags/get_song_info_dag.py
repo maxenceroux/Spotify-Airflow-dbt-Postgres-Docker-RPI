@@ -85,9 +85,11 @@ def get_songs_info(**context):
     merged_li = []
 
     for i in range(math.ceil(len(song_ids)/50)):
-        url = f"""https://api.spotify.com/v1/audio-features/
-                ?ids={','.join(song_ids[i*50:(i+1)*50])}"""
+        url = f"""https://api.spotify.com/v1/audio-features/?ids={','.join(song_ids[i*50:(i+1)*50])}"""
         response = requests.request("GET", url, headers=headers)
+        print(url)
+        print(headers)
+        print(response.json())
         res = response.json()['audio_features']
         print(res)
         print(len(res))
@@ -96,8 +98,7 @@ def get_songs_info(**context):
                 for key in keys_to_remove:
                     song.pop(key)
                 features_list.append(song)
-            url = f"""https://api.spotify.com/v1
-                    /tracks?ids={','.join(song_ids[i*50:(i+1)*50])}"""
+            url = f"""https://api.spotify.com/v1/tracks?ids={','.join(song_ids[i*50:(i+1)*50])}"""
             response = requests.request("GET", url, headers=headers)
             res = response.json()['tracks']
             for song in res:

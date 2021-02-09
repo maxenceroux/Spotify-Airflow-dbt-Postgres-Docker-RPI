@@ -49,7 +49,6 @@ class SpotifyClient:
             'Authorization': f'Bearer {token}'
         }
         response = requests.request("GET", url, headers=headers)
-        logging.warning(response.json())
         if "items" not in response.json():
             return False
         songs = response.json()['items']
