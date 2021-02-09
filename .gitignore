@@ -5,6 +5,6 @@
 target
 *__pycache__*
 *.env
-*_first_migration.py
+# *_first_migration.py
 *migrations.py
 .vscode
