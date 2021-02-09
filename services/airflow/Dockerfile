@@ -1,7 +1,7 @@
 FROM maxenceroux/airflow:latest
 
 RUN mkdir /airflow
-ADD airflow/ /airflow/
+ADD airflow/ /services/airflow/airflow/
 
 RUN mkdir /dbt
 ADD dbt/ /dbt/
