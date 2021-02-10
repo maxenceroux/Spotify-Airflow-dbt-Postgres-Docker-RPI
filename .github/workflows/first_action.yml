@@ -61,6 +61,8 @@ jobs:
       - name: add users
         run: |
           curl -X POST "http://localhost:8000/user/" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"username\":\"maxence\",\"password\":\"maxence\"}"
+      - name: test
+        run: docker-compose -f docker-compose-amd.yml run web pytest      
       - name: enable experimental mode docker
         run: export DOCKER_CLI_EXPERIMENTAL=enabled
       - name: login to docker hub
