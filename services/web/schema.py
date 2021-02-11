@@ -1,6 +1,7 @@
-from pydantic import BaseModel, SecretStr
+from pydantic import BaseModel
 import datetime
 from typing import List
+
 
 class Song(BaseModel):
     artist: str
@@ -20,22 +21,29 @@ class Song(BaseModel):
     tempo: float = None
     duration: int = None
     popularity: int = None
+
     class Config:
         orm_mode = True
+
 
 class Songs(BaseModel):
     songs: List[Song]
+
     class Config:
         orm_mode = True
 
+
 class User(BaseModel):
     username: str
-    password: str 
-    class Config: 
+    password: str
+
+    class Config:
         orm_mode = True
+
 
 class Listen(BaseModel):
     ts: datetime.datetime
     spotify_id: str
+
     class Config:
         orm_mode = True

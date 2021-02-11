@@ -1,17 +1,12 @@
 # pull official base image
-FROM arm32v7/python:3.8
+FROM maxenceroux/spotify-web:latest
 # set work directory
 WORKDIR /usr/src/app/
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-
 # install dependencies
 COPY ./requirements.txt /usr/src/app/requirements.txt
-
-RUN pip3 install -r requirements.txt
-WORKDIR /usr/src/app/services/web
+# RUN pip install --upgrade pip
+# RUN pip install -r requirements.txt
+WORKDIR /usr/src/app/
 # copy project
 COPY . /usr/src/app/
