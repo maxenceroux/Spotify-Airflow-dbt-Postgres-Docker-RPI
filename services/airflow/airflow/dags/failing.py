@@ -14,7 +14,7 @@ default_args = {
 }
 
 dag = DAG(
-    'failing_dagounet',
+    'failing_dag',
     default_args=default_args,
     schedule_interval=None,
     start_date=days_ago(1),
