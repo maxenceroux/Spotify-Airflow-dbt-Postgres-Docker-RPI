@@ -9,19 +9,20 @@ default_args = {
     'start_date': datetime(2019, 1, 1),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1
+    'retries': 0
 }
 # [END default_args]
 
 # [START instantiate_dag]
 most_listened = DAG(
-    'most_listened',
+    'most_listened_dbt',
+    catchup=False,
     default_args=default_args,
     description='Get most listened',
-    schedule_interval=None,
+    schedule_interval="0 4 * * *",
 )
 
-bsh_cmd = 'cd /services/airflow/dbt && dbt run'
+bsh_cmd = 'cd /dbt && dbt run'
 
 
 tmp_operator = BashOperator(task_id='most_listened',

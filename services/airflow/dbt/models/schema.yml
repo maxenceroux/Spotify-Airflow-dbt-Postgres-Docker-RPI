@@ -6,4 +6,5 @@ sources:
     database: postgres
     schema: public
     tables: 
+      -  name: listen
       -  name: song

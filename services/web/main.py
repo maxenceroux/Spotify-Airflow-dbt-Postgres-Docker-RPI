@@ -70,6 +70,8 @@ def get_songs(token: str = Depends(oauth2_scheme)):
     except Exception:
         ts = int(datetime.timestamp(datetime.now() - timedelta(days=5))*1000)
     songs = spotify_cli.get_user_recently_played(token, ts)
+    print(f"timestamp: {ts}")
+    print(f"nb_songs: {len(songs)}")
     if not songs:
         return {"msg": "no songs but success"}
     songs_schema = []
